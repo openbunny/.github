@@ -19,6 +19,15 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\s*\\n\\s*[\\w-]+:\\s*['\"]?(?<currentValue>[^'\"\\s]+)"
       ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^justfile$/"],
+      "matchStrings": [
+        "ghcr\\.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "ghcr.io/renovatebot/renovate"
     }
   ],
   "packageRules": [

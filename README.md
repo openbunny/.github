@@ -56,3 +56,9 @@ Other reusable workflows are `reusable-dco.yml`, `reusable-gitleaks.yml`, `reusa
 ## Visibility
 
 Default community health files apply only while this `.github` repository is public. A private repository's reusable workflows can be called only by repositories in the same organization after its Actions access setting allows them; public repositories cannot call them. [GitHub's Actions access settings](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository) govern that access.
+
+## Local checks
+
+`just check` runs every gate that needs no container: `self-test`, `actions-lint`, `actions-audit`, `tool-pins`, `renovate-regex`, `format`, and `reuse`. `renovate-regex` verifies that the `default.json` custom manager for the `justfile` matches the Renovate image reference in the `justfile`, and fails on zero matches.
+
+`just renovate-preset` validates `default.json` with `renovate-config-validator --strict` inside the pinned Renovate image. It needs docker and is not part of `just check`; CI runs it as its own job. `just check-all` runs `check` and `renovate-preset`, and fails when docker is missing instead of skipping the validation.
