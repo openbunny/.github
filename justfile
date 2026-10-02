@@ -14,7 +14,7 @@ check:
     done
     exit "$failed"
 
-# Runs `check` and `renovate-preset`; fails when docker is missing.
+# Needs docker.
 check-all:
     #!/usr/bin/env bash
     set -uo pipefail
@@ -70,7 +70,7 @@ renovate-regex:
     }
     JS
 
-# Needs docker and pulls the Renovate image; not part of `just check`. Run it through `just check-all`.
+# Pulls the Renovate image; excluded from `check`.
 renovate-preset:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -127,6 +127,11 @@ self-test:
     printf '{"customManagers":[{"managerFilePatterns":["/^justfile$/"],"matchStrings":["ghcr\\\\.io/x:(?<currentValue>[^@]+)@(?<currentDigest>sha256:[a-f0-9]{64})"]}]}' > "$fixture/preset.json"
     printf 'no image here\n' > "$fixture/nomatch"
     if CHECK_PRESET_FILE="$fixture/preset.json" CHECK_RENOVATE_TARGET="$fixture/nomatch" just renovate-regex >/dev/null 2>&1; then echo 'renovate-regex accepted a target with no match' >&2; exit 1; fi
+    printf '{"customManagers":[{"managerFilePatterns":["/^justfile$/"],"matchStrings":["ghcr\\\\.io/x:(?<currentValue>[^@\\\\s]+)(@(?<currentDigest>sha256:[a-f0-9]{64}))?"]}]}' > "$fixture/optionaldigest.json"
+    printf 'ghcr.io/x:1.2.3\n' > "$fixture/nodigest"
+    if CHECK_PRESET_FILE="$fixture/optionaldigest.json" CHECK_RENOVATE_TARGET="$fixture/nodigest" just renovate-regex >/dev/null 2>&1; then echo 'renovate-regex accepted a match without currentDigest' >&2; exit 1; fi
+    printf 'ghcr.io/x:1.2.3@sha256:%s\n' "$(printf '0%.0s' {1..64})" > "$fixture/pinned"
+    CHECK_PRESET_FILE="$fixture/preset.json" CHECK_RENOVATE_TARGET="$fixture/pinned" just renovate-regex >/dev/null 2>&1 || { echo 'renovate-regex rejected a pinned line' >&2; exit 1; }
     printf '{}' > "$fixture/nomanager.json"
     if CHECK_PRESET_FILE="$fixture/nomanager.json" just renovate-regex >/dev/null 2>&1; then echo 'renovate-regex accepted a preset with no justfile manager' >&2; exit 1; fi
     printf '# Bad\n\n-   spacing\n' > "$fixture/format/bad.md"
