@@ -40,6 +40,20 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/reusable-zizmor.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+  gitleaks-foreign-mise:
+    name: Gitleaks with a caller mise.toml
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-gitleaks.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+    with:
+      working-directory: fixtures/caller-without-tools
+  zizmor-foreign-mise:
+    name: Zizmor with a caller mise.toml
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-zizmor.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+    with:
+      working-directory: fixtures/caller-without-tools
   dco:
     name: DCO
     if: github.event_name == 'pull_request'

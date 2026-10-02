@@ -8,9 +8,13 @@ on:
         type: string
         # renovate: datasource=github-releases depName=gitleaks/gitleaks
         default: 8.30.1
+      working-directory:
+        description: Directory the tool runs in, relative to the repository root.
+        type: string
+        default: .
 permissions: {}
 concurrency:
-  group: gitleaks-${{ github.ref }}
+  group: gitleaks-${{ inputs.working-directory }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   gitleaks:
@@ -27,6 +31,9 @@ jobs:
       - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           cache: false
-          install_args: gitleaks@${{ inputs.version }}
+          install: false
       - name: gitleaks
-        run: gitleaks git --redact -v
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          TOOL_VERSION: ${{ inputs.version }}
+        run: mise exec gitleaks@"$TOOL_VERSION" -- gitleaks git --redact -v
