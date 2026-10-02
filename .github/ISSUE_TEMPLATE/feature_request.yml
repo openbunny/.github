@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT
 name: Feature request
 description: Suggest a behaviour
-title: '[feature]: '
-labels: ['type/feature', 'status/needs-triage']
+title: "[feature]: "
+labels: ["type/feature", "status/needs-triage"]
 body:
   - type: textarea
     id: problem

@@ -32,7 +32,7 @@ jobs:
     uses: openbunny/.github/.github/workflows/reusable-check.yml@<commit-sha>
     with:
       runner: macos-latest
-      xcode: '26.0'
+      xcode: "26.0"
   reuse:
     permissions:
       contents: read

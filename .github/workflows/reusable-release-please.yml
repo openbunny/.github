@@ -14,7 +14,7 @@ on:
       signoff:
         description: Sign-off identity for the release commit.
         type: string
-        default: ''
+        default: ""
     secrets:
       token:
         description: PAT for the release PR and tag; falls back to GITHUB_TOKEN.

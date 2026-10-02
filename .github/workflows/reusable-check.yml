@@ -4,17 +4,17 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: 'Runner label: ubuntu-latest or macos-latest.'
+        description: "Runner label: ubuntu-latest or macos-latest."
         type: string
         default: ubuntu-latest
       tools:
         description: Space-separated mise tools to install; empty installs every tool in the caller's mise.toml.
         type: string
-        default: ''
+        default: ""
       xcode:
         description: Xcode version to select on a macOS runner, such as 26.0; empty keeps the runner default.
         type: string
-        default: ''
+        default: ""
       recipe:
         description: just recipe to run.
         type: string
