@@ -17,6 +17,14 @@ jobs:
     uses: ./.github/workflows/reusable-check.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
     with:
       runner: ubuntu-latest
+  renovate-preset:
+    name: Renovate preset
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-check.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+    with:
+      tools: just
+      recipe: renovate-preset
   reuse:
     name: REUSE
     permissions:

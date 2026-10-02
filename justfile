@@ -8,7 +8,7 @@ check:
     #!/usr/bin/env bash
     set -uo pipefail
     failed=0
-    for gate in self-test actions-lint actions-audit tool-pins renovate-preset format reuse; do
+    for gate in self-test actions-lint actions-audit tool-pins format reuse; do
         printf '\njust %s\n' "$gate"
         just "$gate" || failed=1
     done
@@ -45,7 +45,8 @@ renovate-preset:
     #!/usr/bin/env bash
     set -euo pipefail
     test -s default.json || { echo "renovate-preset: default.json is missing or empty" >&2; exit 1; }
-    renovate-config-validator --strict default.json
+    command -v docker >/dev/null || { echo "renovate-preset: docker is not installed" >&2; exit 1; }
+    docker run --rm --entrypoint renovate-config-validator -v "$PWD/default.json:/work/default.json:ro" -w /work ghcr.io/renovatebot/renovate:44.132.2@sha256:0191afbc3937e5316263426fc0ce1450f5c143d42e3f91da8c6f771e317fae51 --strict default.json
 
 format:
     #!/usr/bin/env bash
