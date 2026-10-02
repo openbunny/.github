@@ -34,8 +34,9 @@ jobs:
       contents: read
     uses: openbunny/.github/.github/workflows/reusable-check.yml@<commit-sha>
     with:
-      runner: macos-latest
-      xcode: "26.0"
+      runner: xcode-27
+      xcode: "27.0"
+      graphics_tools: true
   reuse:
     permissions:
       contents: read
@@ -49,12 +50,13 @@ jobs:
 | `runner`          | `ubuntu-latest` | One of the runner labels listed below; any other value fails the job.                      |
 | `tools`           | empty           | Space-separated mise tools to install; empty installs every tool in `mise.toml`.           |
 | `xcode`           | empty           | Xcode version to select on a macOS runner, such as `26.0`; empty keeps the runner default. |
+| `graphics_tools`  | `false`         | Install librsvg and ImageMagick for icon verification on macOS.                            |
 | `recipe`          | `check`         | The `just` recipe to run.                                                                  |
 | `timeout-minutes` | `30`            | Job timeout in minutes.                                                                    |
 
-Allowed `runner` labels: `ubuntu-latest`, `ubuntu-24.04`, `ubuntu-22.04`, `macos-latest`, `macos-26`, `macos-15`. A pinned label keeps the job on one OS image when `-latest` moves to a newer one. The first step of the job compares the label with this list, so adding a label means editing the `case` in `reusable-check.yml` and this list together. `ci.yml` proves a pinned label runs by calling the workflow with `ubuntu-24.04` and `macos-26`.
+Allowed `runner` labels: `ubuntu-latest`, `ubuntu-24.04`, `ubuntu-22.04`, `macos-latest`, `macos-26`, `macos-15`, `xcode-27`. A pinned label keeps the job on one OS image when `-latest` moves to a newer one. The first step of the job compares the label with this list, so adding a label means editing the `case` in `reusable-check.yml` and this list together. `ci.yml` proves a pinned label runs by calling the workflow with `ubuntu-24.04` and `macos-26`.
 
-A caller declares every tool its recipe needs in `mise.toml`, pinned to an exact version, or lists exact `tool@version` pairs in `tools`. The recipe installs project dependencies itself. Apps built with Xcode (scrollmark, glyphmark, and Swift packages such as openbunny-theme) set `runner: macos-latest`, and `xcode` where a specific version matters. Go (tickerbox-cli) and bun (openbunny-react) projects keep the default runner.
+A caller declares every tool its recipe needs in `mise.toml`, pinned to an exact version, or lists exact `tool@version` pairs in `tools`. The recipe installs project dependencies itself. Apps built with Xcode set `runner` to an image with the required Xcode version. Extension checks set `graphics-tools: true` when their icon gate needs `rsvg-convert` and `magick`. Go and bun projects keep the default runner.
 
 Other reusable workflows are `reusable-dco.yml`, `reusable-gitleaks.yml`, `reusable-reuse.yml`, `reusable-scorecard.yml`, `reusable-zizmor.yml`, and `reusable-release-please.yml`. `reusable-gitleaks.yml` and `reusable-zizmor.yml` take a `version` input that defaults to a pinned release and a `working-directory` input that defaults to `.`. Both run the tool with `mise exec <tool>@<version>`, so the tool version comes from the input and a `mise.toml` in the caller that does not list the tool does not affect the run. `ci.yml` proves this by calling both from `fixtures/caller-without-tools`, whose `mise.toml` lists neither tool. Release Please requires the caller to grant `contents: write`, `pull-requests: write`, and `issues: write`; its optional `token` secret falls back to `GITHUB_TOKEN`, which cannot trigger downstream workflows. Scorecard requires the caller to grant `id-token: write`; its `publish` input defaults to `false` and must be `true` only on a public repository. `reusable-dco.yml` skips every event other than `pull_request`.
 

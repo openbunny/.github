@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: "Runner label: ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-26, or macos-15."
+        description: "Runner label: ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-26, macos-15, or xcode-27."
         type: string
         default: ubuntu-latest
       tools:
@@ -15,6 +15,10 @@ on:
         description: Xcode version to select on a macOS runner, such as 26.0; empty keeps the runner default.
         type: string
         default: ""
+      graphics_tools:
+        description: Install librsvg and ImageMagick for icon verification on macOS.
+        type: boolean
+        default: false
       recipe:
         description: just recipe to run.
         type: string
@@ -40,8 +44,8 @@ jobs:
           RUNNER: ${{ inputs.runner }}
         run: |
           case "$RUNNER" in
-            ubuntu-latest | ubuntu-24.04 | ubuntu-22.04 | macos-latest | macos-26 | macos-15) ;;
-            *) echo "runner must be one of ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-26, macos-15, got: $RUNNER" >&2; exit 1 ;;
+            ubuntu-latest | ubuntu-24.04 | ubuntu-22.04 | macos-latest | macos-26 | macos-15 | xcode-27) ;;
+            *) echo "runner must be one of ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-15, macos-26, xcode-27, got: $RUNNER" >&2; exit 1 ;;
           esac
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -55,6 +59,9 @@ jobs:
         with:
           cache: false
           install_args: ${{ inputs.tools }}
+      - name: install graphics tools
+        if: inputs.graphics_tools && runner.os == 'macOS'
+        run: brew install librsvg imagemagick
       - name: just
         env:
           RECIPE: ${{ inputs.recipe }}
