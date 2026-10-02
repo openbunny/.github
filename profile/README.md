@@ -2,4 +2,4 @@
 
 # openbunny
 
-open source software
+open source software & shared design resources
