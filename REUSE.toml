@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = ".github"
+SPDX-PackageSupplier = "OpenBunny"
+SPDX-PackageDownloadLocation = "https://github.com/openbunny/.github"
+
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 OpenBunny"
+SPDX-License-Identifier = "MIT"

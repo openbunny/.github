@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: MIT
+name: Bug report
+description: Something behaves differently from what it documents
+title: '[bug]: '
+labels: ['type/bug', 'status/needs-triage']
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed
+      description: What happened, including any error text.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: What you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The exact commands run and the environment they ran in.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release tag or commit the report applies to.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: The OS and architecture the report applies to.
+    validations:
+      required: false

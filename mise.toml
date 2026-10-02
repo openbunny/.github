@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+[tools]
+actionlint = "1.7.12"
+gitleaks = "8.30.1"
+just = "1.58.0"
+node = "24.21.0"
+"npm:prettier" = "3.9.9"
+"npm:renovate" = "44.74.0"
+uv = "0.12.21"
+"pipx:reuse" = "6.2.0"
+zizmor = "1.30.1"

@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: MIT
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    name: Check
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-check.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+    with:
+      runner: ubuntu-latest
+  reuse:
+    name: REUSE
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-reuse.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+  gitleaks:
+    name: Gitleaks
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-gitleaks.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+  zizmor:
+    name: Zizmor
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-zizmor.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+  dco:
+    name: DCO
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-dco.yml # zizmor: ignore[self-repository] local reusable, versioned by commit

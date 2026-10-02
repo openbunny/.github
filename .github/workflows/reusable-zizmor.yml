@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MIT
+name: Reusable zizmor
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: zizmor version to install.
+        type: string
+        # renovate: datasource=pypi depName=zizmor
+        default: 1.30.1
+permissions: {}
+concurrency:
+  group: zizmor-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  zizmor:
+    name: Zizmor
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          cache: false
+          install_args: zizmor@${{ inputs.version }}
+      - name: zizmor
+        run: zizmor --persona=pedantic .github/workflows

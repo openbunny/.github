@@ -1,0 +1,61 @@
+# SPDX-License-Identifier: MIT
+name: Reusable check
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'Runner label: ubuntu-latest or macos-latest.'
+        type: string
+        default: ubuntu-latest
+      tools:
+        description: Space-separated mise tools to install; empty installs every tool in the caller's mise.toml.
+        type: string
+        default: ''
+      xcode:
+        description: Xcode version to select on a macOS runner, such as 26.0; empty keeps the runner default.
+        type: string
+        default: ''
+      recipe:
+        description: just recipe to run.
+        type: string
+        default: check
+      timeout-minutes:
+        description: Job timeout in minutes.
+        type: number
+        default: 30
+permissions: {}
+concurrency:
+  group: check-${{ inputs.runner }}-${{ inputs.recipe }}-${{ inputs.tools }}-${{ inputs.xcode }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    name: Check
+    permissions:
+      contents: read
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: reject unsupported runner
+        env:
+          RUNNER: ${{ inputs.runner }}
+        run: |
+          case "$RUNNER" in
+            ubuntu-latest | macos-latest) ;;
+            *) echo "runner must be ubuntu-latest or macos-latest, got: $RUNNER" >&2; exit 1 ;;
+          esac
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: select Xcode
+        if: inputs.xcode != ''
+        env:
+          XCODE: ${{ inputs.xcode }}
+        run: sudo xcode-select --switch "/Applications/Xcode_${XCODE}.app"
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          cache: false
+          install_args: ${{ inputs.tools }}
+      - name: just
+        env:
+          RECIPE: ${{ inputs.recipe }}
+        run: just "$RECIPE"
