@@ -43,11 +43,13 @@ jobs:
 
 | Input             | Default         | Effect                                                                                     |
 | ----------------- | --------------- | ------------------------------------------------------------------------------------------ |
-| `runner`          | `ubuntu-latest` | `ubuntu-latest` or `macos-latest`; any other value fails the job.                          |
+| `runner`          | `ubuntu-latest` | One of the runner labels listed below; any other value fails the job.                      |
 | `tools`           | empty           | Space-separated mise tools to install; empty installs every tool in `mise.toml`.           |
 | `xcode`           | empty           | Xcode version to select on a macOS runner, such as `26.0`; empty keeps the runner default. |
 | `recipe`          | `check`         | The `just` recipe to run.                                                                  |
 | `timeout-minutes` | `30`            | Job timeout in minutes.                                                                    |
+
+Allowed `runner` labels: `ubuntu-latest`, `ubuntu-24.04`, `ubuntu-22.04`, `macos-latest`, `macos-26`, `macos-15`. A pinned label keeps the job on one OS image when `-latest` moves to a newer one. The first step of the job compares the label with this list, so adding a label means editing the `case` in `reusable-check.yml` and this list together. `ci.yml` proves a pinned label runs by calling the workflow with `ubuntu-24.04` and `macos-26`.
 
 A caller declares every tool its recipe needs in `mise.toml`, pinned to an exact version, or lists exact `tool@version` pairs in `tools`. The recipe installs project dependencies itself. Apps built with Xcode (scrollmark, glyphmark, and Swift packages such as openbunny-theme) set `runner: macos-latest`, and `xcode` where a specific version matters. Go (tickerbox-cli) and bun (openbunny-react) projects keep the default runner.
 

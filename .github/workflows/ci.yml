@@ -17,6 +17,19 @@ jobs:
     uses: ./.github/workflows/reusable-check.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
     with:
       runner: ubuntu-latest
+  pinned-runner:
+    name: Pinned runner ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-26]
+    permissions:
+      contents: read
+    uses: ./.github/workflows/reusable-check.yml # zizmor: ignore[self-repository] local reusable, versioned by commit
+    with:
+      runner: ${{ matrix.runner }}
+      tools: just
+      recipe: runner-probe
   renovate-preset:
     name: Renovate preset
     permissions:

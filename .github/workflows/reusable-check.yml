@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       runner:
-        description: "Runner label: ubuntu-latest or macos-latest."
+        description: "Runner label: ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-26, or macos-15."
         type: string
         default: ubuntu-latest
       tools:
@@ -40,8 +40,8 @@ jobs:
           RUNNER: ${{ inputs.runner }}
         run: |
           case "$RUNNER" in
-            ubuntu-latest | macos-latest) ;;
-            *) echo "runner must be ubuntu-latest or macos-latest, got: $RUNNER" >&2; exit 1 ;;
+            ubuntu-latest | ubuntu-24.04 | ubuntu-22.04 | macos-latest | macos-26 | macos-15) ;;
+            *) echo "runner must be one of ubuntu-latest, ubuntu-24.04, ubuntu-22.04, macos-latest, macos-26, macos-15, got: $RUNNER" >&2; exit 1 ;;
           esac
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

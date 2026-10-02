@@ -26,6 +26,9 @@ check-all:
     done
     exit "$failed"
 
+runner-probe:
+    @uname -sm
+
 actions-lint:
     #!/usr/bin/env bash
     set -euo pipefail
