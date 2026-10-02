@@ -11,10 +11,6 @@ on:
         description: Release-please manifest path.
         type: string
         default: .release-please-manifest.json
-      signoff:
-        description: Sign-off identity for the release commit.
-        type: string
-        default: ""
     secrets:
       token:
         description: PAT for the release PR and tag; falls back to GITHUB_TOKEN.
@@ -41,7 +37,6 @@ jobs:
         with:
           config-file: ${{ inputs.config-file }}
           manifest-file: ${{ inputs.manifest-file }}
-          signoff: ${{ inputs.signoff }}
           # A real-user PAT makes the release PR and tag come from a user
           # instead of github-actions[bot], so the PR's CI runs and the
           # pushed tag triggers the release workflow (a GITHUB_TOKEN-created
