@@ -2,6 +2,9 @@
 name: Noop
 on: workflow_dispatch
 permissions: {}
+concurrency:
+  group: noop
+  cancel-in-progress: true
 jobs:
   noop:
     name: Noop
