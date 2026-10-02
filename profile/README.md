@@ -1,4 +1,4 @@
-![](https://github.com/images/mona-happy.gif)
+![](https://raw.githubusercontent.com/openbunny/.github/main/profile/error.gif)
 
 # openbunny
 
