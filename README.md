@@ -2,6 +2,9 @@
 
 # OpenBunny organization defaults
 
+> **Work in progress.** No release exists yet. Names, identifiers and
+> interfaces can change without notice.
+
 This repository supplies [default community health files](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file), reusable GitHub Actions workflows, a Renovate preset, and a label taxonomy.
 
 | Path                                                                 | Use                                                                                                  |
